@@ -1,0 +1,70 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <h1 class="display-5 font-weight-bold">Crear Usuario</h1>
+            <form th:action="@{/users/save}" th:object="${user}" method="post" enctype="multipart/form-data">
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="name" class="h5 font-weight-bold">Nombre:</label>
+                        <input type="text" class="form-control font-weight-bold form-control-lg" th:field="*{name}" id="name" placeholder="Escriba el nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="h5 font-weight-bold">Apellido:</label>
+                        <input type="text" class="form-control font-weight-bold form-control-lg" th:field="*{lastname}" id="lastname" placeholder="Escriba el apellido" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="h5 font-weight-bold">Correo Electrónico:</label>
+                        <input type="text" class="form-control font-weight-bold form-control-lg" th:field="*{email}" id="email" placeholder="Escriba el correo electrónico" required>
+                    </div>
+
+
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="rol" class="h5 font-weight-bold">Rol:</label>
+                        <select class="form-control font-weight-bold form-control-lg" th:field="*{rol}" id="rol" required>
+                            <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.rolname}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status" class="h5 font-weight-bold">Estado:</label>
+                        <select class="form-control font-weight-bold form-control-lg" id="status" th:field="*{status}" required>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="h5 font-weight-bold">Contraseña:</label>
+                        <input type="password" class="form-control font-weight-bold form-control-lg" th:field="*{password}" id="password" placeholder="Escriba la contraseña" required>
+                    </div>
+                </div>
+
+            </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="url" class="h3 font-weight-bold">    Imagen:</label>
+                        </div></div>
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <input type="file" id="url" name="urlImage" class="font-weight-bold form-control form-control-lg">
+                        </div></div>
+                </div>
+            <hr class="my-4">
+            <div class="d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-primary btn-lg btn-custom-border mr-2">Crear</button>
+                <a th:href="@{/users}" class="btn btn-outline-secondary btn-lg btn-custom-border">Cancelar</a>
+            </div>
+
+        </form>
+    </div>
+</div>

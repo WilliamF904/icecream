@@ -1,0 +1,23 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <h1 class="display-5 font-weight-bold">Crear nuevo rol</h1>
+        <form th:action="@{/roles/save}" th:object="${rol}" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="rolname" class="h5 font-weight-bold">Nombre del rol:</label>
+                        <input type="text" class="form-control font-weight-bold form-control-lg" th:field="*{rolname}" id="rolname" placeholder="Escriba el nombre del rol" required>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-primary btn-lg btn-custom-border mr-2">Guardar</button>
+                <a th:href="@{/roles}" class="btn btn-outline-secondary btn-lg btn-custom-border">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>

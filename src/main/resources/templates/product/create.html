@@ -1,0 +1,75 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <h1 class="display-5 font-weight-bold">Crear Producto</h1>
+
+        <form th:action="@{/products/save}" th:object="${product}" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <!-- Columna izquierda para la categoría -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="category" class="h5 font-weight-bold">Categoría:</label>
+                        <select class="form-control font-weight-bold form-control-lg" th:field="*{category}" id="category" required>
+                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.categoryname}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Columna derecha para la descripción -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="description" class="h5 font-weight-bold">Descripción:</label>
+                        <input type="text" class="form-control font-weight-bold form-control-lg" th:field="*{description}" id="description" placeholder="Escriba la descripción" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Columna izquierda para el precio -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="price" class="h5 font-weight-bold">Precio:</label>
+                        <input type="number" class="form-control font-weight-bold form-control-lg" th:field="*{price}" id="price" placeholder="Escriba el precio" step="0.01" required>
+                    </div>
+                </div>
+
+                <!-- Columna derecha para la cantidad -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="quantity" class="h5 font-weight-bold">Cantidad:</label>
+                        <input type="number" class="form-control font-weight-bold form-control-lg" th:field="*{quantity}" id="quantity" placeholder="Escriba la cantidad" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Columna izquierda para el estado -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="status" class="h5 font-weight-bold">Estado:</label>
+                        <select class="form-control font-weight-bold form-control-lg" id="status" th:field="*{status}" required>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="url" class="h5 font-weight-bold">Imagen:</label>
+                    <input type="file" id="url" name="urlImage" class="font-weight-bold form-control form-control-lg">
+                </div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+            <div class="d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-primary btn-lg btn-custom-border mr-2">Crear</button>
+                <a th:href="@{/products}" class="btn btn-outline-secondary btn-lg btn-custom-border">Cancelar</a>
+            </div>
+
+        </form>
+    </div>
+</div>

@@ -1,0 +1,158 @@
+
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Mensajes de éxito, advertencia y error -->
+        <div th:if="${msg}" class="alert alert-success">
+            <h4 th:text="${msg}" class="font-weight-bold"></h4>
+        </div>
+        <div th:if="${msg2}" class="alert alert-warning">
+            <h4 th:text="${msg2}" class="font-weight-bold"></h4>
+        </div>
+        <div th:if="${error}" class="alert alert-danger">
+            <h4 th:text="${error}" class="font-weight-bold"></h4>
+        </div>
+
+        <h1 class="display-5 font-weight-bold">Lista de Imágenes</h1>
+
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre de la Imagen</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="imagen : ${imagenes}">
+                <td>
+                    <img th:src="@{/img/{imagen}(imagen=${imagen})}" alt="Imagen" style="width: 100px; height: auto;">
+                </td>
+                <td>
+                    <span th:text="${imagen}"></span>
+                </td>
+                <td>
+                    <!-- Botón para eliminar, abre el modal de confirmación -->
+                    <button type="button" class="btn btn-outline-danger font-weight-bold btn-custom-border"
+                            onclick="abrirModalEliminar(this)">
+                        Eliminar
+                    </button>
+
+                    <!-- Botón para abrir el modal de reemplazo -->
+                    <button type="button" class="btn btn-outline-warning font-weight-bold btn-custom-border"
+                            onclick="abrirModalReemplazo(this)">
+                        Reemplazar
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Paginación -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/imagenes(page=${currentPage - 1})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/imagenes(page=${i})}" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/imagenes(page=${currentPage + 1})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+
+    <!-- Modal para reemplazar imagen -->
+    <div class="modal fade" id="modalReemplazo" tabindex="-1" role="dialog" aria-labelledby="modalReemplazoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold" id="modalReemplazoLabel">Reemplazar Imagen</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex align-items-center">
+                        <img id="imagenModal" src="" alt="Imagen a reemplazar" style="width: 150px; height: auto; margin-right: 20px;">
+                        <div>
+                            <label class="h5 font-weight-bold">Nombre de la Imagen:</label>
+                            <input type="text" class="form-control font-weight-bold form-control-lg" id="nombreImagenModal" readonly>
+                        </div>
+                    </div>
+                    <form th:action="@{/imagenes/reemplazar}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="nombreArchivo" id="nombreArchivoInput">
+                        <div class="form-group mt-3">
+                            <label for="file" class="h5 font-weight-bold">Seleccionar nueva imagen:</label>
+                            <input type="file" name="file" id="file" class="form-control" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline-primary font-weight-bold btn-custom-border">Reemplazar</button>
+                            <button type="button" class="btn btn-outline-danger font-weight-bold btn-custom-border" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar imagen -->
+    <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold" id="modalEliminarLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="h5">¿Está seguro de que desea eliminar la imagen:  <span id="nombreImagenEliminar" class="font-weight-bold"></span>?</p>
+                </div>
+                <div class="modal-footer">
+                    <form th:action="@{/imagenes/eliminar}" method="post">
+                        <input type="hidden" name="nombreArchivo" id="nombreArchivoEliminarInput">
+                        <button type="submit" class="btn btn-outline-danger font-weight-bold btn-custom-border">Eliminar</button>
+                        <button type="button" class="btn btn-outline-secondary font-weight-bold btn-custom-border" data-dismiss="modal">Cancelar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para abrir modales y asignar datos -->
+    <script>
+        function abrirModalReemplazo(button) {
+            const nombreImagen = button.closest("tr").querySelector("span").textContent;
+            const srcImagen = button.closest("tr").querySelector("img").src;
+
+            document.getElementById("nombreImagenModal").value = nombreImagen;
+            document.getElementById("nombreArchivoInput").value = nombreImagen;
+            document.getElementById("imagenModal").src = srcImagen;
+
+            $('#modalReemplazo').modal('show');
+        }
+
+        function abrirModalEliminar(button) {
+            const nombreImagen = button.closest("tr").querySelector("span").textContent;
+
+            document.getElementById("nombreImagenEliminar").textContent = nombreImagen;
+            document.getElementById("nombreArchivoEliminarInput").value = nombreImagen;
+
+            $('#modalEliminar').modal('show');
+        }
+    </script>
+</div>
+
+

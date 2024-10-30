@@ -1,0 +1,138 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+  <script defer>
+    document.addEventListener("DOMContentLoaded", function () {
+        const pdfDownloadDiv = document.getElementById("pdfDownload");
+        if (pdfDownloadDiv) {
+            const pdfUrl = pdfDownloadDiv.getAttribute("data-url");
+            const link = document.createElement("a");
+            link.href = pdfUrl;
+            link.download = "";
+            link.style.display = "none";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    });
+  </script>
+  <!-- Div oculto que contiene la URL de descarga -->
+  <div id="pdfDownload" th:if="${pdfDownloadUrl}" th:data-url="${pdfDownloadUrl}"></div>
+
+  <div class="container-fluid">
+    <!-- Mostrar mensaje de éxito si está presente -->
+    <div th:if="${msg}" class="alert alert-success">
+      <h4 th:text="${msg}" class="font-weight-bold"></h4>
+    </div>
+    <!-- Mostrar mensaje de éxito si está presente -->
+    <div th:if="${msg2}" class="alert alert-warning">
+      <h4 th:text="${msg2}" class="font-weight-bold"></h4>
+    </div>
+
+    <!-- Mostrar mensaje de error si está presente -->
+    <div th:if="${error}" class="alert alert-danger">
+      <h4 th:text="${error}" class="font-weight-bold"></h4>
+    </div>
+
+
+
+    <div class="row">
+      <div class="col-md-6">
+        <h1 class="display-5 font-weight-bold">Listado de Pagos</h1>
+        <a th:href="@{/pays/create}" class="btn btn-outline-primary font-weight-bold btn-custom-border ">Nuevo Pago</a>
+
+      </div>
+
+      <div class="col-md-6">
+        <h2 class="display-5 font-weight-bold">Filtrar Pagos</h2>
+
+        <form th:action="@{/pays}" method="get" class="form-inline mb-3">
+          <div class="col-md-5">
+            <div class="form-group mb-3 mr-3">
+              <label class="h6 font-weight-bold">Fecha inicio:</label>
+              <input type="date" name="startDate" class="form-control" placeholder="Fecha Inicial">
+            </div>
+            <div class="form-group mr-3">
+              <input type="text" name="nameclient" class="form-control" placeholder="Nombre del Cliente" >
+            </div>
+          </div>
+
+          <div class="col-md-5">
+            <div class="form-group  mb-3 mr-3">
+              <label class="h6 font-weight-bold">Fecha final:</label>
+              <input type="date" name="endDate" class="form-control" placeholder="Fecha Final">
+            </div>
+            <div class="form-group mr-3">
+              <button type="submit" class="btn btn-outline-success  font-weight-bold btn-custom-border">Buscar</button>
+            </div>
+          </div>
+        </form>
+
+
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+    <table class="table table-striped">
+      <thead class="thead-custom-color">
+      <tr>
+        <th class="h5 font-weight-bold">ID</th>
+        <th class="h5 font-weight-bold">Fecha</th>
+        <th class="h5 font-weight-bold">Hora</th>
+        <th class="h5 font-weight-bold">Productos</th>
+        <th class="h5 font-weight-bold">Cliente</th>
+        <th class="h5 font-weight-bold">Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="pay : ${pays}" >
+        <td th:text="${pay.id}"  class="h5 font-weight-bold"></td>
+        <td th:text="${pay.paydate}" class="h5 font-weight-bold"></td>
+        <td th:text="${pay.paytime}" class="h5 font-weight-bold"></td>
+        <td>
+          <ul>
+            <li th:each="product : ${pay.products}" th:text="${product.description}" class="h5 font-weight-bold"></li>
+          </ul>
+        </td>
+        <td th:text="${pay.nameclient}" class="h5 font-weight-bold"></td>
+        <td>
+
+          <a th:href="@{/pays/details/{id} (id = ${pay.id}) }" class="btn btn-outline-info  font-weight-bold btn-custom-border">Detalles</a>
+
+         </td>
+      </tr>
+      </tbody>
+    </table>
+
+
+
+    <!-- Paginación -->
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item" th:classappend="${pays.number == 0} ? 'disabled'">
+          <a class="page-link" th:href="@{/pays(page=${pays.number})}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item" th:each="pageNumber : ${pageNumbers}"
+            th:classappend="${pageNumber == pays.number + 1} ? 'active'">
+          <a class="page-link" th:href="@{/pays(page=${pageNumber})}" th:text="${pageNumber}"></a>
+        </li>
+        <li class="page-item" th:classappend="${pays.number + 1 == pays.totalPages} ? 'disabled'">
+          <a class="page-link" th:href="@{/pays(page=${pays.number + 2})}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+  </div>
+
+
+
+</div>
+</html>
+

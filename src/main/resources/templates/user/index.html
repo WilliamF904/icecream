@@ -1,0 +1,212 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <div th:if="${msg}" class="alert alert-success">
+            <h4 th:text="${msg}" class="font-weight-bold"></h4>
+        </div>
+
+        <div th:if="${msg2}" class="alert alert-warning">
+            <h4 th:text="${msg2}" class="font-weight-bold"></h4>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger">
+            <h4 th:text="${error}" class="font-weight-bold"></h4>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h1 class="display-5 font-weight-bold">Listado de Usuarios</h1>
+                <div class="btn-group">
+                    <a href="#" class="btn btn-outline-primary font-weight-bold btn-custom-border" data-toggle="modal" data-target="#addUserModal">
+                        <i class="fas fa-plus"></i> Nuevo Usuario
+                    </a>
+                    <div class="dropdown ml-2">
+                        <button class="btn btn-outline-secondary font-weight-bold btn-custom-border dropdown-toggle" type="button" id="pdfDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-file-pdf"></i> Generar PDF
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="pdfDropdown">
+                            <a class="dropdown-item font-weight-bold" th:href="@{/pdf/usuarios}">
+                                <i class="fas fa-list"></i> Todos los usuarios
+                            </a>
+                            <a class="dropdown-item font-weight-bold" th:href="@{/pdf/usuarios/activos}">
+                                <i class="fas fa-check-circle"></i> Usuarios activos
+                            </a>
+                            <a class="dropdown-item font-weight-bold" th:href="@{/pdf/usuarios/inactivos}">
+                                <i class="fas fa-times-circle"></i> Usuarios inactivos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="col-md-6">
+                <h2 class="display-5 font-weight-bold">Filtrar Usuarios</h2>
+                <form th:action="@{/users}" method="get" class="form-inline mb-3">
+                    <div class="form-group mb-3 mr-3">
+                        <input type="text" name="name" class="form-control" placeholder="Nombre" th:value="${name}">
+                    </div>
+                    <div class="form-group mb-3 mr-3">
+                        <input type="text" name="lastname" class="form-control" placeholder="Apellido" th:value="${lastname}">
+                    </div>
+                    <div class="form-group mr-3">
+
+                        <select name="rolId" class="form-control">
+                            <option value="">Seleccione un Rol</option>
+                            <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.rolname}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group mr-3">
+                        <select name="status" class="form-control">
+                            <option value="">Estado</option>
+                            <option value="1" th:selected="${status == 1}">Activo</option>
+                            <option value="0" th:selected="${status == 0}">Inactivo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mr-3">
+                        <button type="submit" class="btn btn-outline-success font-weight-bold btn-custom-border">Buscar</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+        <hr class="my-4">
+        <table class="table table-striped">
+            <thead  class="thead-custom-color">
+            <tr>
+                <th class="h5 font-weight-bold">ID</th>
+                <th class="h5 font-weight-bold">Nombre</th>
+                <th class="h5 font-weight-bold">Apellido</th>
+                <th class="h5 font-weight-bold">Rol</th>
+                <th class="h5 font-weight-bold">Estado</th>
+                <th class="h5 font-weight-bold">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users.content}">
+                <td th:text="${user.id}" class="h5 font-weight-bold"></td>
+                <td th:text="${user.name}" class="h5 font-weight-bold"></td>
+                <td th:text="${user.lastname}" class="h5 font-weight-bold"></td>
+                <td th:text="${user.rol.rolname}" class="h5 font-weight-bold"></td>
+                <td th:text="${user.status == 1 ? 'Activo' : 'Inactivo'}" class="h5 font-weight-bold"></td>
+                <td>
+                    <a th:href="@{/users/details/{id} (id = ${user.id}) }" class="btn btn-outline-info font-weight-bold btn-custom-border">Detalles</a> |
+                    <a th:href="@{/users/edit/{id} (id = ${user.id}) }" class="btn btn-outline-warning font-weight-bold  btn-custom-border">Editar</a> |
+                    <a th:href="@{/users/remove/{id} (id = ${user.id}) }" class="btn btn-outline-danger font-weight-bold btn-custom-border">Eliminar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Paginación -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${users.number == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/users(page=${users.number})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="pageNumber : ${pageNumbers}"
+                    th:classappend="${pageNumber == users.number + 1} ? 'active'">
+                    <a class="page-link" th:href="@{/users(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                </li>
+                <li class="page-item" th:classappend="${users.number + 1 == users.totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/users(page=${users.number + 2})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+
+
+
+
+
+
+    <!-- Modal para agregar nuevo usuario -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold" id="addUserModalLabel">Agregar Nuevo Usuario</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario de agregar usuario -->
+                    <form th:action="@{/users/save}" th:object="${user}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" th:field="*{id}" />
+
+                        <div class="row">
+                            <!-- Columna izquierda -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name" class="h5 font-weight-bold">Nombre:</label>
+                                    <input type="text" class="form-control font-weight-bold form-control-lg" th:field="*{name}" id="name" placeholder="Escriba el nombre" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastname" class="h5 font-weight-bold">Apellido:</label>
+                                    <input type="text" class="form-control font-weight-bold form-control-lg" th:field="*{lastname}" id="lastname" placeholder="Escriba el apellido" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email" class="h5 font-weight-bold">Correo Electrónico:</label>
+                                    <input type="email" class="form-control font-weight-bold form-control-lg" th:field="*{email}" id="email" placeholder="Escriba el correo electrónico" required>
+                                </div>
+                            </div>
+
+                            <!-- Columna derecha -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="rol" class="h5 font-weight-bold">Rol:</label>
+                                    <select class="form-control font-weight-bold form-control-lg" th:field="*{rol}" id="rol" required>
+                                        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.rolname}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="status" class="h5 font-weight-bold">Estado:</label>
+                                    <select class="form-control font-weight-bold form-control-lg" id="status" th:field="*{status}" required>
+                                        <option value="1">Activo</option>
+                                        <option value="0">Inactivo</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="h5 font-weight-bold">Contraseña:</label>
+                                    <input type="password" class="form-control font-weight-bold form-control-lg" th:field="*{password}" id="password" placeholder="Escriba la contraseña" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="url" class="h3 font-weight-bold">Imagen:</label>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <input type="file" id="url" name="urlImage" class="font-weight-bold form-control form-control-lg">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline-primary font-weight-bold">Guardar</button> |
+                            <button type="button" class="btn btn-outline-danger font-weight-bold btn-custom-border" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

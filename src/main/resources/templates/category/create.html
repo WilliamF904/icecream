@@ -1,0 +1,24 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <h1 class="display-5 font-weight-bold">Crear Nueva Categoría</h1>
+        <form th:action="@{/categories/save}" th:object="${category}" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="categoryname" class="h5 font-weight-bold">Nombre de la Categoría:</label>
+                        <input type="text" class="form-control font-weight-bold form-control-lg" th:field="*{categoryname}" id="categoryname" placeholder="Escriba el nombre de la categoría" required>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-primary btn-lg btn-custom-border mr-2">Guardar</button>
+                <a th:href="@{/categories}" class="btn btn-outline-secondary btn-lg btn-custom-border">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>

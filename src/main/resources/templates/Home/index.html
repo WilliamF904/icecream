@@ -1,0 +1,72 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<!-- Estilos personalizados -->
+<style>
+    body {
+        background-color: #f3e5f5; /* Color de fondo suave morado */
+    }
+    .card {
+        background-color: white; /* Fondo de las tarjetas en blanco para un buen contraste */
+        border-radius: 10px;
+    }
+    h1 {
+        color: #6a1b9a; /* Color morado oscuro para el título principal */
+    }
+    h6, h5, h2 {
+        color: #6a1b9a; /* Color morado para los textos dentro de las tarjetas */
+    }
+    .border-left-danger {
+        border-left: 0.25rem solid #8e24aa; /* Borde izquierdo en morado para las tarjetas */
+    }
+
+</style>
+
+<div layout:fragment="content">
+
+    <h1 class="text-center display-5 font-weight-bold">¡Bienvenido!</h1>
+    <hr>
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Tarjetas (columna izquierda) -->
+            <div class="col-lg-6">
+
+                <!-- Tarjeta con frase motivacional -->
+                <div class="card shadow mb-4 border-left-danger">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">"El único modo de hacer un gran trabajo es amar lo que haces." - Steve Jobs</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <h2 id="time" class="display-5 font-weight-bold"></h2>
+                        <div id="theme" class="font-weight-bold"></div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta con información del dispositivo -->
+                <div class="card shadow mb-4 border-left-danger">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Información del Dispositivo y Conexión</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 id="os" class="display-5 font-weight-bold"></h5>
+                        <h5 id="browser" class="display-5 font-weight-bold"></h5>
+                        <h5 id="resolution" class="display-5 font-weight-bold"></h5>
+                        <h5 id="connection-status" class="display-5 font-weight-bold"></h5>
+                        <h5 id="connection-speed" class="display-5 font-weight-bold"></h5>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Imagen (columna derecha) -->
+            <div class="col-lg-6 d-flex align-items-center justify-content-center">
+                <img th:src="@{img/sorvete.png}" alt="Imagen descriptiva" class="img-fluid rounded" style="max-width: 65%; margin-top: -5%; ">
+            </div>
+
+        </div>
+    </div>
+</div>
+</html>
+

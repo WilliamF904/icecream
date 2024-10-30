@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/img/sorvete.ico}" type="image/x-icon">
+
+    <title>ESFE CREAM</title>
+
+    <!-- Custom fonts for this template-->
+    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/stylepro.css}" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/sweetalert2.all.min.js}"></script>
+
+    <!--Botón oscuro-->
+<style>
+
+    .btn-custom-border {
+  border-width: 2px; /*  grosor de botones*/
+}
+
+  .thead-custom-color {
+    background-color: rgb(111, 66, 193); /* Color de fondo */
+    color: #ffffff; /* Color del texto blanco para buen contraste */
+  }
+
+
+  /* Estilos para el modo oscuro */
+body.Modo_Oscuro {
+  background-color: #181818;
+  color: #f1f1f1;
+}
+
+.navbar.Modo_Oscuro {
+  background-color: #303136;
+}
+
+.sidebar.Modo_Oscuro {
+  background-color: #333333;
+}
+/* The switch - the box around the slider */
+.switch {
+display: block;
+--width-of-switch: 3.5em;
+--height-of-switch: 2em;
+/* size of sliding icon -- sun and moon */
+--size-of-icon: 1.4em;
+/* it is like a inline-padding of switch */
+--slider-offset: 0.3em;
+position: relative;
+width: var(--width-of-switch);
+height: var(--height-of-switch);
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+
+/* The slider */
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #f4f4f5;
+transition: .4s;
+border-radius: 30px;
+}
+
+.slider:before {
+position: absolute;
+content: "";
+height: var(--size-of-icon,1.4em);
+width: var(--size-of-icon,1.4em);
+border-radius: 20px;
+left: var(--slider-offset,0.3em);
+top: 50%;
+transform: translateY(-50%);
+background: linear-gradient(40deg,#ff0080,#ff8c00 70%);
+;
+transition: .4s;
+}
+
+input:checked + .slider {
+background-color: #303136;
+}
+
+input:checked + .slider:before {
+left: calc(100% - (var(--size-of-icon,1.4em) + var(--slider-offset,0.3em)));
+background: #303136;
+/* change the value of second inset in box-shadow to change the angle and direction of the moon  */
+box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -4px 0 0 #a3dafb;
+}
+</style>
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar"  style="background-color: rgb(111, 66, 193);">
+
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-laugh-wink"></i>
+            </div>
+            <!-- <sup>(*u*)</sup>-->
+            <div class="sidebar-brand-text mx-3">ICE CREAM</div>
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item active">
+            <a class="nav-link" href="/">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>DASHBOARD</span></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="/roles">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>ROLES</span></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="/users">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>USUARIOS</span></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="/categories">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>CATEGORIAS</span></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="/products">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>PRODUCTOS</span></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="/pays">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>PAGOS</span></a>
+        </li>
+
+
+
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+
+
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper"  class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Topbar -->
+
+            <nav class="navbar navbar-expand navbar-light bg-gradient-light topbar mb-4 static-top shadow">
+
+
+                <!-- Botón de cambio de modo -->
+                <label class="switch">
+                    <input type="checkbox" onclick="Cambiar_Modo()" >
+                    <span class="slider"></span>
+                </label>
+
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+
+                    <!-- Nav Item - Product Dropdown -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="productDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-800 small font-weight-bold">Creación rápida</span>
+                            <i class="fas fa-edit fa-1x  fa-fw ml-1 text-gray-700"></i>
+                        </a>
+                        <!-- Dropdown - Product Options -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="productDropdown">
+                            <a class="dropdown-item font-weight-bold" th:href="@{/roles/create}">
+                                <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Crear Rol
+                            </a>
+                            <a class="dropdown-item font-weight-bold" th:href="@{/users/create}">
+                                <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Crear Usuario
+                            </a>
+                            <a class="dropdown-item font-weight-bold" th:href="@{/categories/create}">
+                                <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Crear Categoria
+                            </a>
+                            <a class="dropdown-item font-weight-bold" th:href="@{/products/create}">
+                                <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Crear Producto
+                            </a>
+                            <a class="dropdown-item font-weight-bold" th:href="@{/pays/create}">
+                                <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Crear Pago
+                            </a>
+                        </div>
+                    </li>
+
+                    <div class="topbar-divider d-none d-sm-block"></div>
+
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-800  font-weight-bold small">Opciones</span>
+                            <img class="img-profile rounded-circle"
+                                 th:src="@{/img/undraw_profile.svg}">
+                        </a>
+                        <!-- Dropdown - User Information -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="userDropdown">
+                            <a th:href="@{/imagenes}" class="dropdown-item font-weight-bold" >
+                                <i class="fas fa-image fa-sm fa-fw mr-2 text-gray-700"></i>
+
+                                Ver Imágenes
+                            </a>
+                            <div class="dropdown-divider"></div>
+
+                            <a class="dropdown-item font-weight-bold" href="/login" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-700 "></i>
+                                Cerrar Sesión
+                            </a>
+
+                        </div>
+                    </li>
+
+                </ul>
+
+            </nav>
+            <!-- Aquí se renderizan las vistas de contenido -->
+            <div layout:fragment="content">
+
+                <p>Changing contents...</p>
+            </div>
+
+
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+
+</div>
+<!-- End of Content Wrapper -->
+
+
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="login">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/js/sb-admin-2.min.js}"></script>
+
+<!-- Page level plugins -->
+<script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
+
+<!-- Page level custom scripts -->
+<script th:src="@{/js/demo/chart-area-demo.js}"></script>
+<script th:src="@{/js/demo/chart-pie-demo.js}"></script>
+
+<!--Funcion inicio-->
+<script>
+    function Cambiar_Modo() {
+       var accordionSidebar = document.getElementById("accordionSidebar");
+
+       var currentColor = window.getComputedStyle(accordionSidebar).backgroundColor;
+
+       // Definir los colores en formato RGB
+       var color1 = "rgb(111, 66, 193)";
+       var color2 = "rgb(40, 0, 112)";
+
+
+       if (currentColor === color1) {
+           accordionSidebar.style.backgroundColor = color2;
+       } else {
+           accordionSidebar.style.backgroundColor = color1;
+       }
+   }
+
+
+
+
+
+         function updateTime() {
+             const timeElement = document.getElementById('time');
+             const now = new Date();
+             const hours = String(now.getHours()).padStart(2, '0');
+             const minutes = String(now.getMinutes()).padStart(2, '0');
+             const seconds = String(now.getSeconds()).padStart(2, '0');
+             timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+         }
+
+         function getDeviceInfo() {
+             const osElement = document.getElementById('os');
+
+             const resolutionElement = document.getElementById('resolution');
+
+             const os = navigator.platform;
+
+             const resolution = `${window.screen.width} x ${window.screen.height}`;
+
+             osElement.textContent = `Sistema Operativo: ${os}`;
+
+             resolutionElement.textContent = `Resolución de Pantalla: ${resolution}`;
+         }
+
+         function updateConnectionStatus() {
+             const statusElement = document.getElementById('connection-status');
+             const speedElement = document.getElementById('connection-speed');
+             const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+             statusElement.textContent = `Estado: ${navigator.onLine ? 'Conectado' : 'Desconectado'}`;
+
+             if (connection) {
+                 speedElement.textContent = `Velocidad: ${connection.downlink} Mbps`;
+             } else {
+                 speedElement.textContent = `Velocidad: No disponible`;
+             }
+         }
+
+         function detectColorScheme() {
+             const themeElement = document.getElementById('theme');
+             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+             themeElement.textContent = `Tema Preferido: ${prefersDark ? 'Oscuro' : 'Claro'}`;
+         }
+
+         document.addEventListener('DOMContentLoaded', function () {
+             setInterval(updateTime, 1000);
+             getDeviceInfo();
+             updateConnectionStatus();
+             window.addEventListener('online', updateConnectionStatus);
+             window.addEventListener('offline', updateConnectionStatus);
+             detectColorScheme();
+         });
+</script>
+
+<!--Funcion de Bryan-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+     const productsSelect = document.getElementById('productsSelect');
+     const quantityInputs = document.getElementById('quantityInputs');
+
+     productsSelect.addEventListener('change', function() {
+         // Limpia los campos de cantidad actuales
+         quantityInputs.innerHTML = '';
+
+         // Obtén las opciones seleccionadas
+         const selectedOptions = Array.from(productsSelect.selectedOptions);
+
+         // Genera un campo de cantidad para cada producto seleccionado
+         selectedOptions.forEach(option => {
+             const productId = option.value;
+             const productDescription = option.textContent;
+
+             // Crea un contenedor para la cantidad
+             const quantityContainer = document.createElement('div');
+             quantityContainer.className = 'form-group';
+
+             // Crea una etiqueta para el campo de cantidad
+             const label = document.createElement('label');
+             label.textContent = `Cantidad para ${productDescription}:`;
+
+             // Crea un campo de entrada para la cantidad
+             const input = document.createElement('input');
+             input.type = 'number';
+             input.name = `productQuantities[${productId}]`;
+             input.className = 'form-control';
+             input.required = true;
+             input.placeholder = 'Ingrese la cantidad';
+             input.min = 1; // Asegura que la cantidad mínima sea 1
+
+             // Añade la etiqueta y el campo de entrada al contenedor
+             quantityContainer.appendChild(label);
+             quantityContainer.appendChild(input);
+
+             // Añade el contenedor al contenedor principal de cantidades
+             quantityInputs.appendChild(quantityContainer);
+         });
+     });
+ });
+
+</script>
+
+</body>
+
+</html>

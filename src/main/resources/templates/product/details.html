@@ -1,0 +1,75 @@
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content">
+    <div class="container-fluid">
+
+        <div class="row">
+            <!-- Columna izquierda para categoría y descripción -->
+            <div class="col-md-6">
+                <h1 class="display-5 font-weight-bold">Detalles del Producto</h1>
+                <hr>
+
+                <div class="form-group">
+                    <label for="category" class="h5 font-weight-bold">Categoría:</label>
+                    <input type="text" class="form-control font-weight-bold form-control-lg" th:value="${product.category.categoryname}" id="category" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="description" class="h5 font-weight-bold">Descripción:</label>
+                    <input type="text" class="form-control font-weight-bold form-control-lg" th:value="${product.description}" id="description" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="status" class="h5 font-weight-bold">Estado:</label>
+                    <input type="text" class="form-control font-weight-bold form-control-lg" th:value="${product.status == 1 ? 'Activo' : 'Inactivo'}" id="status" disabled>
+                </div>
+            </div>
+
+            <!-- Columna derecha para precio y cantidad -->
+            <div class="col-md-6">
+                <div class="form-group text-center justify-content-center align-items-center">
+                    <img id="productImage" th:src="@{${product.url} != null ? ${product.url} : '/img/generalproducto.png'}"
+                         alt="Imagen del Producto"
+                         class="img-fluid img-thumbnail"
+                         style="width: 185px; height: 185px;" />
+                </div>
+
+                <div class="form-group">
+                    <label for="price" class="h5 font-weight-bold">Precio:</label>
+                    <input type="text" class="form-control font-weight-bold form-control-lg" th:value="${product.price}" id="price" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="quantity" class="h5 font-weight-bold">Cantidad:</label>
+                    <input type="text" class="form-control font-weight-bold form-control-lg" th:value="${product.quantity}" id="quantity" disabled>
+                </div>
+
+            </div>
+        </div>
+        <hr class="my-4">
+        <div class="d-flex align-items-end">
+            <a th:href="@{/products/{id}/pdf(id=${product.id})}" class="btn btn-outline-secondary btn-lg btn-custom-border  mr-2">
+                <i class="fas fa-file-pdf"></i> Descargar PDF
+            </a>
+            <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-outline-warning btn-lg btn-custom-border mr-2">Editar</a>
+            <a th:href="@{/products}" class="btn btn-outline-secondary btn-lg btn-custom-border  mr-2">Regresar</a>
+
+
+
+        </div>
+    </div>
+
+
+
+
+
+  <!--  <script>
+        function updateImage() {
+            const imageUrl = /*[[${product.url}]]*/ '[[${product.url}]]'; // Thymeleaf reemplaza esta URL en el servidor
+            const timestamp = new Date().getTime(); // Genera un parámetro único basado en el tiempo
+            document.getElementById("productImage").src = imageUrl + "?t=" + timestamp; // Actualiza la URL de la imagen con un parámetro de tiempo
+        }
+
+        // Configura la recarga de la imagen cada 5 segundos (5000 ms)
+        setInterval(updateImage, 5000);
+    </script>
+
+-->
+
+</div>

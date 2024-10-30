@@ -1,0 +1,39 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Mostrar mensaje de error si está presente -->
+        <div th:if="${error}" class="alert alert-danger">
+            <p th:text="${error}"></p>
+        </div>
+
+        <!-- Mostrar mensaje de éxito si está presente -->
+        <div th:if="${msg}" class="alert alert-success">
+            <p th:text="${msg}"></p>
+        </div>
+
+        <h1 class="display-5 font-weight-bold">Eliminar Categoría</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id" class="h5 font-weight-bold">ID de la Categoría:</label>
+                    <input type="text" class="form-control font-weight-bold form-control-lg" th:value="${category.id}" id="id" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="categoryname" class="h5 font-weight-bold">Nombre de la Categoría:</label>
+                    <input type="text" class="form-control font-weight-bold form-control-lg" th:value="${category.categoryname}" id="categoryname" disabled>
+                </div>
+            </div>
+        </div>
+        <form th:action="@{/categories/delete}" method="post">
+            <input type="hidden" name="id" th:value="${category.id}" />
+            <hr class="my-4">
+            <div class="d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-danger btn-lg btn-custom-border mr-2" onclick="return confirm('¿Estás seguro de eliminar esta categoría?');">Eliminar</button>
+                <a th:href="@{/categories}" class="btn btn-outline-secondary btn-lg btn-custom-border">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

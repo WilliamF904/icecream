@@ -1,0 +1,375 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+
+        <form th:action="@{/pays/save}" th:object="${pay}" method="post">
+            <style>
+                .text-center {
+                    text-align: center;
+                    font-weight: bold;
+                }
+            </style>
+
+            <div class="row">
+                <div class="col-md-5">
+                    <h1 class="display-5 font-weight-bold">Crear nuevo Pago</h1>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="paydate" class="h5 font-weight-bold">Fecha:</label>
+                                <input type="date" class="form-control font-weight-bold form-control-lg" th:field="*{paydate}" id="paydate" placeholder="Fecha de pago" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="paytime" class="h5 font-weight-bold">Hora:</label>
+                                <input type="time" class="form-control font-weight-bold form-control-lg" th:field="*{paytime}" id="paytime" placeholder="Hora de pago" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="user" class="h5 font-weight-bold">Usuario:</label>
+                        <select class="form-control font-weight-bold form-control-lg" th:field="*{user.id}" id="user" required>
+                            <option th:each="user : ${users}"
+                                    th:value="${user.id}"
+                                    th:text="${user.name + ' ' + user.lastname}"></option>
+                        </select>
+                    </div>
+
+
+                    <!-- Modal de Error -->
+                    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content bg-danger text-white">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="errorMessage">
+                                    <!-- El mensaje de error se inserta dinámicamente aquí -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <div class="form-group">
+                        <label for="productsSelect" class="h5 font-weight-bold">Seleccionar Productos:</label>
+                        <input type="text" id="searchProduct" class="form-control font-weight-bold form-control-lg" placeholder="Buscar producto...">
+                        <select id="productsSelect" class="form-control font-weight-bold form-control-lg" multiple>
+                            <option th:each="product : ${products}"
+                                    th:if="${product.status == 1}"
+                                    th:value="${product.id}"
+                                    th:data-description="${product.description}"
+                                    th:data-price="${product.price}"
+                                    th:data-quantity="${product.quantity}"
+                                    th:text="${product.description + ' - Precio: $' + product.price}">
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+                <div class="col-md-7">
+                    <br>
+                    <div class="form-group">
+                        <label for="nameclient" class="h5 font-weight-bold">Nombre del Cliente:</label>
+                        <input type="text" class="form-control font-weight-bold form-control-lg" th:field="*{nameclient}" id="nameclient" placeholder="Escriba el nombre del cliente" required>
+                    </div>
+
+
+                    <table class="table table-bordered table-lg">
+                        <thead class="thead-custom-color">
+                        <tr>
+                            <th class="h5 font-weight-bold" style="width: 30%;">Producto</th>
+                            <th class="h5 font-weight-bold" style="width: 10%;">Cantidad</th>
+                            <th class="h5 font-weight-bold" style="width: 15%;">Precio Uni.</th>
+                            <th class="h5 font-weight-bold" style="width: 15%;">Subtotal</th>
+                            <th class="h5 font-weight-bold" style="width: 20%;"> Acción </th>
+                        </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                        <tr>
+                            <td class="h3 font-weight-bold">
+                                <div id="productNames" class="form-group">
+                                    <!-- Nombres de productos seleccionados -->
+                                </div>
+                            </td>
+                            <td class="h3 font-weight-bold">
+                                <div id="quantityInputs" class="form-group">
+                                    <!-- Cantidades -->
+                                </div>
+                            </td>
+                            <td class="h3 font-weight-bold">
+                                <div id="productPrices" class="form-group">
+                                    <!-- Precios unitarios -->
+                                </div>
+                            </td>
+                            <td class="h3 font-weight-bold">
+                                <div id="productSubtotals" class="form-group">
+                                    <!-- Subtotales -->
+                                </div>
+                            </td>
+                            <td class="h3 font-weight-bold">
+                                <div id="productActions" class="form-group">
+                                    <!-- Botones de eliminar irán aquí -->
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-right h4 font-weight-bold">Total General:</td>
+                            <td class="h4 font-weight-bold" id="totalGeneral">$0.00</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+
+
+
+
+
+            </div>
+
+
+
+
+
+            <hr>
+            <button type="submit" class="btn btn-secondary  btn-lg btn-custom-border mr-2" name="downloadPdf" value="true">Guardar y descargar</button> |
+            <button type="submit" class="btn btn-primary btn-lg btn-custom-border mr-2"  name="downloadPdf" value="false">Guardar</button> |
+            <a th:href="@{/pays}" class="btn btn-secondary btn-lg btn-custom-border">Regresar</a>
+        </form>
+    </div>
+
+    <!-- Modal para agregar cantidad -->
+    <div class="modal fade" id="quantityModal" tabindex="-1" role="dialog" aria-labelledby="quantityModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="quantityModalLabel">Agregar Cantidad</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="quantityForm">
+                        <div class="form-group">
+                            <label for="quantityInput" id="productLabel">Cantidad para el producto</label>
+                            <input type="number" id="quantityInput" class="form-control" min="1" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="saveQuantity" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchProduct');
+            const productsSelect = document.getElementById('productsSelect');
+            let selectedProductId = null;
+            let selectedProductDescription = null;
+            let selectedQuantities = {};
+
+            // Filtrar productos al escribir en el campo de búsqueda
+            searchInput.addEventListener('input', function() {
+                const filter = searchInput.value.toLowerCase();
+                const options = productsSelect.options;
+
+                for (let i = 0; i < options.length; i++) {
+                    const option = options[i];
+                    const productDescription = option.getAttribute('data-description').toLowerCase();
+
+                    if (productDescription.includes(filter)) {
+                        option.style.display = "";
+                    } else {
+                        option.style.display = "none";
+                    }
+                }
+            });
+
+            // Función para mostrar el modal de error por encima del modal de cantidad
+            function mostrarError(mensaje) {
+                document.getElementById('errorMessage').textContent = mensaje;
+                $('#errorModal').modal({ backdrop: 'static', keyboard: false });
+                $('#errorModal').css('z-index', parseInt($('#quantityModal').css('z-index')) + 1);
+                $('#errorModal').modal('show');
+            }
+
+            // Función para actualizar el total general
+            function actualizarTotalGeneral() {
+                let totalGeneral = 0;
+                const rows = document.getElementById("productTableBody").getElementsByTagName("tr");
+
+                for (let row of rows) {
+                    const subtotalText = row.cells[3].textContent;
+                    const subtotal = parseFloat(subtotalText.replace('$', ''));
+                    if (!isNaN(subtotal)) {
+                        totalGeneral += subtotal;
+                    }
+                }
+
+                document.getElementById("totalGeneral").textContent = '$' + totalGeneral.toFixed(2);
+            }
+
+            // Seleccionar productos
+            productsSelect.addEventListener('change', function() {
+                const selectedOption = productsSelect.options[productsSelect.selectedIndex];
+                selectedProductId = selectedOption.value;
+                selectedProductDescription = selectedOption.textContent;
+
+                document.getElementById('productLabel').textContent = `Cantidad para ${selectedProductDescription}:`;
+                document.getElementById('quantityInput').value = selectedQuantities[selectedProductId] || '';
+
+                const availableQuantity = parseInt(selectedOption.getAttribute('data-quantity'));
+                if (availableQuantity < 1) {
+                    mostrarError('Este producto no tiene stock disponible');
+                    productsSelect.value = '';
+                    return;
+                }
+
+                $('#quantityModal').modal('show');
+            });
+
+            // Guardar cantidad y actualizar tabla
+            document.getElementById('saveQuantity').addEventListener('click', function() {
+                const quantity = parseInt(document.getElementById('quantityInput').value);
+
+                if (quantity && selectedProductId) {
+                    const selectedOption = productsSelect.querySelector(`option[value="${selectedProductId}"]`);
+                    const availableQuantity = parseInt(selectedOption.getAttribute('data-quantity'));
+
+                    if (quantity > availableQuantity) {
+                        $('#quantityModal').modal('hide');
+                        mostrarError(`Error: La cantidad solicitada (${quantity}) es mayor que la cantidad disponible (${availableQuantity})`);
+                        return;
+                    }
+
+                    selectedQuantities[selectedProductId] = quantity;
+                    const productTableBody = document.getElementById("productTableBody");
+                    const hiddenInputsContainer = document.getElementById("hiddenInputs") || createHiddenInputsContainer();
+
+                    productTableBody.innerHTML = '';
+                    hiddenInputsContainer.innerHTML = '';
+
+                    for (let productId in selectedQuantities) {
+                        const selectedOption = productsSelect.querySelector(`option[value="${productId}"]`);
+                        const productDescription = selectedOption.getAttribute('data-description');
+                        const productQuantity = selectedQuantities[productId];
+                        const productPrice = parseFloat(selectedOption.getAttribute('data-price'));
+
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = `productQuantities[${productId}]`;
+                        hiddenInput.value = productQuantity;
+                        hiddenInputsContainer.appendChild(hiddenInput);
+
+                        const row = document.createElement('tr');
+
+                        // Nombre del producto
+                        const nameCell = document.createElement('td');
+                        nameCell.textContent = productDescription;
+                        row.appendChild(nameCell);
+
+                        // Cantidad centrada
+                        const quantityCell = document.createElement('td');
+                        quantityCell.textContent = productQuantity;
+                        quantityCell.className = 'text-center'; // Centramos el contenido de la cantidad
+                        row.appendChild(quantityCell);
+
+                        // Precio unitario
+                        const priceCell = document.createElement('td');
+                        priceCell.textContent = `$${productPrice.toFixed(2)}`;
+                        row.appendChild(priceCell);
+
+                        // Subtotal
+                        const subtotal = productQuantity * productPrice;
+                        const subtotalCell = document.createElement('td');
+                        subtotalCell.textContent = `$${subtotal.toFixed(2)}`;
+                        row.appendChild(subtotalCell);
+
+                        // Acciones
+                        const actionCell = document.createElement('td');
+                        const editButton = document.createElement('button');
+                        editButton.className = 'btn btn-outline-success btn-sm mr-2 btn-custom-border';
+
+                        // Reemplazamos el texto por el icono
+                        const editIcon = document.createElement('i');
+                        editIcon.className = 'fas fa-edit fa-1x fa-fw ml-1 text-green-600';
+                        editButton.appendChild(editIcon);
+
+                        editButton.addEventListener('click', function() {
+                            document.getElementById('productLabel').textContent = `Modificar cantidad para ${productDescription}:`;
+                            document.getElementById('quantityInput').value = productQuantity;
+                            selectedProductId = productId;
+                            $('#quantityModal').modal('show');
+                        });
+
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'btn btn-outline-danger btn-sm mr-2 btn-custom-border';
+                        deleteButton.textContent = 'x';
+                        deleteButton.addEventListener('click', function() {
+                            delete selectedQuantities[productId];
+                            row.remove();
+                            const hiddenInput = document.querySelector(`input[name="productQuantities[${productId}]"]`);
+                            if (hiddenInput) {
+                                hiddenInput.remove();
+                            }
+                            actualizarTotalGeneral();
+                        });
+
+                        actionCell.appendChild(editButton);
+                        actionCell.appendChild(deleteButton);
+                        row.appendChild(actionCell);
+
+                        productTableBody.appendChild(row);
+                    }
+
+                    actualizarTotalGeneral();
+                    $('#quantityModal').modal('hide');
+                }
+            });
+
+            // Función para crear el contenedor de inputs ocultos
+            function createHiddenInputsContainer() {
+                const container = document.createElement('div');
+                container.id = 'hiddenInputs';
+                document.querySelector('form').appendChild(container);
+                return container;
+            }
+        });
+    </script>
+
+
+
+
+
+</div>

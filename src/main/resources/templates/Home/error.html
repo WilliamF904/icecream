@@ -1,0 +1,28 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Mostrar mensaje de éxito si está presente -->
+        <div th:if="${msg}" class="alert alert-success">
+            <p th:text="${msg}"></p>
+        </div>
+        <!-- Mostrar mensaje de éxito si está presente -->
+        <div th:if="${msg2}" class="alert alert-warning">
+            <p th:text="${msg2}"></p>
+        </div>
+
+        <!-- Mostrar mensaje de error si está presente -->
+        <div th:if="${error}" class="alert alert-danger">
+            <p th:text="${error}"></p>
+        </div>
+    <!-- 404 Error Text -->
+    <div class="text-center">
+        <div class="error mx-auto" data-text="404">404</div>
+        <p class="lead text-gray-800 mb-5">Page Not Found</p>
+        <p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
+    </div>
+
+</div>
+</div>

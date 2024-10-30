@@ -1,0 +1,78 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <h1 class="display-5 font-weight-bold">Detalles del Pago</h1>
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label for="paydate" class="h5 font-weight-bold">Fecha de Pago:</label>
+                    <input type="text" class="form-control font-weight-bold form-control-lg w-100" id="paydate" th:value="${pay.paydate}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="paytime" class="h4 font-weight-bold">Hora de Pago:</label>
+                    <input type="text" class="form-control font-weight-bold form-control-lg w-100" id="paytime" th:value="${pay.paytime}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="user" class="h5 font-weight-bold">Usuario:</label>
+                    <input type="text" class="form-control font-weight-bold form-control-lg w-100" id="user" th:value="${pay.user.name + ' ' + pay.user.lastname}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="nameclient" class="h5 font-weight-bold">Nombre del Cliente:</label>
+                    <input type="text" class="form-control font-weight-bold form-control-lg w-100" id="nameclient" th:value="${pay.nameclient}" readonly>
+                </div>
+            </div>
+
+            <div class="col-md-7"> <!-- Cambiado de col-md-4 a col-md-6 -->
+                <div class="row">
+                    <div class="col-md-8">
+                    <h3 class="display-5 font-weight-bold">Productos y Cantidades</h3>
+                    </div>
+                    <div class="col-md-4">
+                        <a  th:href="@{/pays/{id}/pdf(id=${pay.id})}"  class="btn btn-outline-secondary btn-sm btn-custom-border">
+                            <i class="fas fa-file-pdf"></i> Descargar PDF
+                        </a>
+
+                    </div>
+                </div>
+                <table class="table table-bordered table-lg">
+                    <thead  class="thead-custom-color">
+                    <tr>
+                        <th class="h5 font-weight-bold" style="width: 35%;">Producto</th>
+
+                        <th class="h5 font-weight-bold">Cantidad</th>
+                        <th class="h5 font-weight-bold">Precio Unitario</th>
+                        <th class="h5 font-weight-bold">Subtotal</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="entry : ${pay.productQuantities}">
+                        <td th:text="${entry.key.description}" class="h4 font-weight-bold" style="width: 35%;"></td>
+
+                        <td th:text="${entry.value}" class="h4 font-weight-bold"></td>
+                        <td th:text="${entry.key.price}" class="h4 font-weight-bold"></td>
+                        <td th:text="${entry.key.price.multiply(new java.math.BigDecimal(entry.value))}" class="h4 font-weight-bold"></td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="3" class="text-right h3 font-weight-bold">Total:</th>
+                        <th th:text="${total}" class="h2 font-weight-bold"></th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <hr>
+                <a th:href="@{/pays}" class="btn btn-outline-secondary btn-lg btn-custom-border ">Regresar</a>
+            </div>
+        </div>
+    </div>
+</div>
+

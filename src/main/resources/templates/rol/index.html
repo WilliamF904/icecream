@@ -1,0 +1,87 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Mostrar mensaje de éxito si está presente -->
+        <div th:if="${msg}" class="alert alert-success">
+            <h4 th:text="${msg}" class="font-weight-bold"></h4>
+        </div>
+        <!-- Mostrar mensaje de éxito si está presente -->
+        <div th:if="${msg2}" class="alert alert-warning">
+            <h4 th:text="${msg2}" class="font-weight-bold"></h4>
+        </div>
+
+        <!-- Mostrar mensaje de error si está presente -->
+        <div th:if="${error}" class="alert alert-danger">
+            <h4 th:text="${error}" class="font-weight-bold"></h4>
+        </div>
+
+
+        <h1  class="display-5 font-weight-bold">Listado de roles</h1>
+        <!--<a th:href="@{/roles/create}" class="btn btn-outline-primary font-weight-bold btn-custom-border ">Nuevo rol</a>-->
+        <a href="#" class="btn btn-outline-primary font-weight-bold btn-custom-border" data-toggle="modal" data-target="#addRoleModal">Nuevo Rol</a>
+
+
+
+        <hr class="my-4">
+
+        <table class="table table-striped">
+            <thead class="thead-custom-color">
+            <tr>
+                <th class="h5 font-weight-bold">ID</th>
+                <th class="h5 font-weight-bold">Rol</th>
+                <th class="h5 font-weight-bold">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="rol : ${user}"  class="h5 font-weight-bold">
+                <td th:text="${rol.id}"  class="h5 font-weight-bold"></td>
+                <td th:text="${rol.rolname}"  class="h5 font-weight-bold"></td>
+                <td>
+                    <a th:href="@{/roles/details/{id} (id = ${rol.id}) }" class="btn btn-outline-info  font-weight-bold btn-custom-border">Detalles</a> |
+                    <a th:href="@{/roles/edit/{id} (id = ${rol.id}) }" class="btn btn-outline-warning  font-weight-bold btn-custom-border">Editar</a> |
+                    <a th:href="@{/roles/remove/{id} (id = ${rol.id}) }" class="btn btn-outline-danger  font-weight-bold btn-custom-border">Eliminar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+
+        <!-- Modal para agregar nuevo rol -->
+        <div class="modal fade" id="addRoleModal" tabindex="-1" role="dialog" aria-labelledby="addRoleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-bold" id="addRoleModalLabel">Agregar Nuevo Rol</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Formulario de agregar rol -->
+                        <form th:action="@{/roles/save}" th:object="${rol}" method="post">
+                            <input type="hidden" th:field="*{id}" />
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="rolname" class="h5 font-weight-bold">Nombre del Rol:</label>
+                                        <input type="text" class="form-control font-weight-bold form-control-lg" th:field="*{rolname}" id="rolname" placeholder="Escriba el nombre del rol" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-outline-primary font-weight-bold">Guardar</button> |
+                                <button type="button" class="btn btn-outline-danger font-weight-bold btn-custom-border" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

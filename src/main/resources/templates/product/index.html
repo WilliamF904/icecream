@@ -1,0 +1,211 @@
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Mostrar mensaje de éxito si está presente -->
+        <div th:if="${msg}" class="alert alert-success">
+            <h4 th:text="${msg}" class="font-weight-bold"></h4>
+        </div>
+        <!-- Mostrar mensaje de éxito si está presente -->
+        <div th:if="${msg2}" class="alert alert-warning">
+            <h4 th:text="${msg2}" class="font-weight-bold"></h4>
+        </div>
+
+        <!-- Mostrar mensaje de error si está presente -->
+        <div th:if="${error}" class="alert alert-danger">
+            <h4 th:text="${error}" class="font-weight-bold"></h4>
+        </div>
+
+
+
+        <div class="col-md-6">
+            <h1 class="display-5 font-weight-bold">Listado de Productos</h1>
+            <div class="btn-group">
+                <a href="#" class="btn btn-outline-primary font-weight-bold btn-custom-border" data-toggle="modal" data-target="#addProductModal">
+                    <i class="fas fa-plus"></i> Nuevo Producto
+                </a>
+                <div class="dropdown ml-2">
+                    <button class="btn btn-outline-secondary font-weight-bold btn-custom-border dropdown-toggle" type="button" id="pdfDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-file-pdf"></i> Generar PDF
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="pdfDropdown">
+                        <a class="dropdown-item font-weight-bold" th:href="@{/products/pdf/all}">
+                            <i class="fas fa-list"></i> Todos los productos
+                        </a>
+                        <a class="dropdown-item font-weight-bold" th:href="@{/products/pdf/active}">
+                            <i class="fas fa-check-circle"></i> Productos activos
+                        </a>
+                        <a class="dropdown-item font-weight-bold" th:href="@{/products/pdf/inactive}">
+                            <i class="fas fa-times-circle"></i> Productos inactivos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+<br>
+        <!-- Formulario de filtrado de productos alineado a la derecha -->
+        <div class="row mb-3">
+            <div class="col-md-12 d-flex justify-content-end">
+
+                <form th:action="@{/products}" method="get" class="form-inline">
+                    <div class="form-group mb-2">
+                        <input type="text" name="description" class="form-control" placeholder="Descripción">
+                    </div>
+                    <div class="form-group mx-sm-2 mb-2">
+                        <input type="number" name="minPrice" class="form-control" placeholder="Precio Mínimo" step="0.01">
+                    </div>
+                    <div class="form-group mx-sm-2 mb-2">
+                        <input type="number" name="maxPrice" class="form-control" placeholder="Precio Máximo" step="0.01">
+                    </div>
+                    <div class="form-group mx-sm-2 mb-2">
+                        <select name="status" class="form-control">
+                            <option value="">Estado</option>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="form-group mx-sm-2 mb-2">
+                        <select name="categoryId" class="form-control">
+                            <option value="">Categoría</option>
+                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.categoryname}"></option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success font-weight-bold mb-2">Buscar</button>
+                </form>
+            </div>
+        </div>
+
+
+        <hr class="my-4">
+
+        <table class="table table-striped">
+            <thead class="thead-custom-color">
+            <tr>
+                <th class="h5 font-weight-bold">ID</th>
+                <th class="h5 font-weight-bold">Categoría</th>
+                <th class="h5 font-weight-bold">Descripción</th>
+                <th class="h5 font-weight-bold">Precio</th>
+               <!-- <th class="h5 font-weight-bold">Cantidad</th>-->
+                <th class="h5 font-weight-bold">Estado</th>
+                <th class="h5 font-weight-bold">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products.content}">
+                <td th:text="${product.id}" class="h5 font-weight-bold"></td>
+                <td th:text="${product.category.categoryname}" class="h5 font-weight-bold"></td>
+                <td th:text="${product.description}" class="h5 font-weight-bold"></td>
+                <td th:text="${product.price}" class="h5 font-weight-bold"></td>
+               <!-- <td th:text="${product.quantity}" class="h5 font-weight-bold"></td>-->
+                <td th:text="${product.status == 1 ? 'Activo' : 'Inactivo'}" class="h5 font-weight-bold"></td>
+                <td>
+                    <a th:href="@{/products/details/{id} (id = ${product.id}) }" class="btn btn-outline-info  font-weight-bold btn-custom-border">Detalles</a> |
+                    <a th:href="@{/products/edit/{id} (id = ${product.id}) }" class="btn btn-outline-warning font-weight-bold btn-custom-border">Editar</a> |
+                    <a th:href="@{/products/plus/{id}(id=${product.id})}" class="btn btn-outline-success font-weight-bold btn-custom-border">
+                        Añadir/Remover Stock
+                    </a> |
+                    <a th:href="@{/products/remove/{id} (id = ${product.id}) }" class="btn btn-outline-danger  font-weight-bold btn-custom-border">Eliminar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Paginación -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${products.number == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/products(page=${products.number})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="pageNumber : ${pageNumbers}"
+                    th:classappend="${pageNumber == products.number + 1} ? 'active'">
+                    <a class="page-link" th:href="@{/products(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                </li>
+                <li class="page-item" th:classappend="${products.number + 1 == products.totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/products(page=${products.number + 2})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+
+
+
+
+        <!-- Modal para agregar nuevo producto -->
+        <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-bold" id="addProductModalLabel">Agregar Nuevo Producto</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Formulario de agregar producto -->
+                        <form th:action="@{/products/save}" th:object="${product}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" th:field="*{id}" />
+
+                            <div class="row">
+                                <!-- Columna izquierda -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="category" class="h5 font-weight-bold">Categoría:</label>
+                                        <select class="form-control font-weight-bold form-control-lg" th:field="*{category}" id="category" required>
+                                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.categoryname}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description" class="h5 font-weight-bold">Descripción:</label>
+                                        <input type="text" class="form-control font-weight-bold form-control-lg" th:field="*{description}" id="description" placeholder="Escriba la descripción" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="h5 font-weight-bold">Estado:</label>
+                                        <select class="form-control font-weight-bold form-control-lg" th:field="*{status}">
+                                            <option value="1">Activo</option>
+                                            <option value="0">Inactivo</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Columna derecha -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="price" class="h5 font-weight-bold">Precio:</label>
+                                        <input type="number" class="form-control font-weight-bold form-control-lg" th:field="*{price}" id="price" placeholder="Escriba el precio" step="0.01" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quantity" class="h5 font-weight-bold">Cantidad:</label>
+                                        <input type="number" class="form-control font-weight-bold form-control-lg" th:field="*{quantity}" id="quantity" placeholder="Escriba la cantidad" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="url" class="h5 font-weight-bold">Imagen:</label>
+                                        <input type="file" id="url" name="urlImage" class="font-weight-bold form-control form-control-lg">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-outline-primary font-weight-bold btn-custom-border">Guardar</button> |
+                                <button type="button" class="btn btn-outline-danger font-weight-bold btn-custom-border" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+
+    </div>
+</div>
+
